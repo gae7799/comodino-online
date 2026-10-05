@@ -19,7 +19,7 @@ parola: sono due fogli di testo con dentro delle informazioni vere.
 
 import datetime
 
-AGGIORNATA = '25 settembre 2026'
+AGGIORNATA = '5 ottobre 2026'
 CHI = 'Gaetano D’Agostino'
 POSTA = 'gae7799@gmail.com'
 
@@ -84,15 +84,21 @@ accanto al foglio della dieta della settimana.</p>
 <p>Non d&agrave; consigli, non assegna punteggi e non giudica n&eacute; il
 sonno n&eacute; quello che si mangia. Conta, e mostra quello che ha contato.</p>
 
-<p>Il computer di casa deposita qui una pagina riassuntiva, perch&eacute; il
-titolare possa guardarla anche dal telefono. La vede lui e nessun altro:
-&egrave; protetta dall'accesso con Google e riservata a un solo indirizzo.</p>
+<p>Il titolare pu&ograve; guardare i propri dati di sonno anche dal telefono.
+Premendo &laquo;Collega Google Health&raquo;, questo servizio legge il sonno
+direttamente da Google Health a ogni apertura della pagina, con il permesso di
+sola lettura del titolare. Se il collegamento manca o Google non risponde,
+mostra l'ultima pagina riassuntiva depositata dal computer di casa. La vede lui
+e nessun altro: &egrave; protetta dall'accesso con Google e riservata a un solo
+indirizzo.</p>
 
 <h2>Cosa non fa</h2>
 
 <ul>
-  <li>lo storico non esce dal computer di casa: qui arriva solo un riassunto,
-      che resta in memoria e sparisce a ogni riavvio</li>
+  <li>su questo servizio i dati di sonno non vengono scritti su nessun disco:
+      restano in memoria per un paio di minuti e poi si rileggono da Google.
+      Sul disco del servizio c'&egrave; solo il permesso di lettura (un gettone
+      di rinnovo), non i dati</li>
   <li>non condivide niente con nessuno, e non vende niente a nessuno</li>
   <li>non scrive nulla sull'account Google: i permessi che chiede sono
       entrambi di sola lettura</li>
@@ -146,13 +152,25 @@ Quella pagina:</p>
       unico indirizzo email stabilito. Chiunque altro apra il link non vede
       nulla, nemmeno conoscendolo</li>
 </ul>
+<p>Se il titolare collega Google Health a questo servizio:</p>
+<ul>
+  <li>i dati di sonno sono letti da Google a ogni apertura della pagina, ridotti
+      a conti e grafici, e tenuti in memoria al massimo per un paio di minuti;
+      non vengono scritti su nessun disco e spariscono a ogni riavvio</li>
+  <li>l'unica cosa che il servizio ricorda &egrave; il gettone di rinnovo del
+      permesso (sola lettura sul sonno), in un file riservato nel volume del
+      servizio. Con quel gettone non si pu&ograve; scrivere n&eacute; cancellare
+      nulla sull'account</li>
+</ul>
 <p>I dati non vengono venduti, ceduti, pubblicati, n&eacute; usati per
 pubblicit&agrave;, profilazione o addestramento di modelli.</p>
 
 <h2>Per quanto tempo</h2>
 <p>Sul computer di casa: finch&eacute; il titolare tiene quei file. Si
-cancellano cancellando i file. Su questo servizio: fino al deposito
-successivo o al primo riavvio, e nulla sopravvive in forma permanente.</p>
+cancellano cancellando i file. Su questo servizio: i dati di sonno al
+massimo qualche minuto, in memoria; il gettone di rinnovo finch&eacute; il
+titolare non preme &laquo;scollega&raquo; o non toglie il permesso dal proprio
+account Google.</p>
 
 <h2>Come si revoca l'accesso</h2>
 <p>Da <a href="https://myaccount.google.com/permissions">
@@ -160,6 +178,8 @@ myaccount.google.com/permissions</a>, togliendo l'autorizzazione all'app
 &laquo;Comodino&raquo;. Da quel momento il programma non legge pi&ugrave;
 nulla e l'accesso a questa pagina non funziona pi&ugrave;. I file gi&agrave;
 scritti sul disco di casa restano, e si cancellano a mano.</p>
+<p>Dalla pagina riservata c'&egrave; anche il tasto &laquo;scollega&raquo;:
+revoca il permesso presso Google e cancella il gettone da questo servizio.</p>
 
 <h2>Questa pagina</h2>
 <p>Non usa cookie, non ha strumenti di statistica e non registra chi la
