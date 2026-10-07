@@ -1,4 +1,9 @@
 {
   "notti_perche_i_conti_abbiano_senso": 30,
-  "giorni_del_ciclo": 30
+  "giorni_del_ciclo": 30,
+  "notte_buona_efficienza": 93,
+  "notte_buona_profondo_min": 75,
+  "colore_oro_entro_min": 30,
+  "colore_verde_entro_min": 60,
+  "colore_rosso_entro_min": 120
 }

@@ -45,6 +45,19 @@ def _giorni_ciclo():
         return 30
 
 
+def impostazione(chiave, predefinito):
+    """Un numero da configurazione.json. Se manca o e' sbagliato, vale il
+    predefinito: la pagina si apre comunque."""
+    import json
+    try:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                               'configurazione.json'), encoding='utf-8') as f:
+            valore = json.load(f).get(chiave)
+        return type(predefinito)(valore) if valore is not None else predefinito
+    except (OSError, ValueError, TypeError):
+        return predefinito
+
+
 QUI = os.path.dirname(os.path.abspath(__file__))
 RADICE = os.path.dirname(os.path.dirname(QUI))          # secondo-cervello
 SALUTE = os.path.join(RADICE, 'salute')
@@ -109,6 +122,7 @@ def notti(righe=None):
             'profondo': _numero(riga.get('profondo_min')),
             'rem': _numero(riga.get('rem_min')),
             'risvegli': _numero(riga.get('risvegli')),
+            'sveglio': _numero(riga.get('sveglio_min')),
             'sessioni': _numero(riga.get('sessioni')) or 1,
             'festivo': data.weekday() >= 5,
         })
@@ -341,6 +355,44 @@ def statistiche(elenco=None):
                            if prec else None),
         }
 
+    # --- le notti buone: efficienza e sonno profondo sopra due soglie TUE
+    # (configurazione.json). Servono a dire "come dormi quando dormi bene".
+    soglia_eff = impostazione('notte_buona_efficienza', 93)
+    soglia_prof = impostazione('notte_buona_profondo_min', 75)
+    buone = [n for n in elenco
+             if (n['efficienza'] or 0) >= soglia_eff and (n['profondo'] or 0) >= soglia_prof]
+    notti_buone = ({'n': len(buone), 'media': _media([n['minuti'] for n in buone]),
+                    'soglia_efficienza': soglia_eff, 'soglia_profondo': soglia_prof}
+                   if buone else None)
+
+    # --- come dormi, per durata della notte
+    fasce = []
+    for nome, basso, alto in (('Sotto 7h', 0, 420), ('7\u20139h', 420, 540), ('Oltre 9h', 540, 10 ** 6)):
+        gruppo = [n for n in elenco if basso <= n['minuti'] < alto]
+        fasce.append({'nome': nome, 'notti': len(gruppo),
+                      'efficienza': _media([n['efficienza'] for n in gruppo]),
+                      'sveglio': _media([n['sveglio'] for n in gruppo]),
+                      'profondo': _media([n['profondo'] for n in gruppo]),
+                      'rem': _media([n['rem'] for n in gruppo])})
+
+    # --- le notti che mancano alla settimana: il minimo e' aritmetica sul
+    # metro; il suggerito sta a meta' fra il minimo e quanto dormi di solito
+    # nelle notti buone. Una scelta, scritta in pagina.
+    if corrente and corrente['rimanenti']:
+        buona = notti_buone['media'] if notti_buone else None
+        servono_nn = corrente['servono_a_notte']
+        if buona is None:
+            suggerite = servono_nn
+        elif corrente['gia_sopra'] or servono_nn is None:
+            suggerite = buona
+        else:
+            suggerite = (servono_nn + buona) / 2.0
+        prima_mancante = elenco[-1]['data'] + datetime.timedelta(days=1)
+        corrente['suggerite'] = suggerite
+        corrente['buone'] = buona
+        corrente['dal'] = prima_mancante.isoformat()
+        corrente['al'] = (prima_mancante + datetime.timedelta(days=corrente['rimanenti'] - 1)).isoformat()
+
     corta = min(elenco, key=lambda n: n['minuti'])
     lunga = max(elenco, key=lambda n: n['minuti'])
     sotto = [n for n in elenco if n['minuti'] < media]
@@ -353,7 +405,7 @@ def statistiche(elenco=None):
         'elenco': [{'data': n['data'].isoformat(), 'minuti': n['minuti'],
                     'a_letto': n['a_letto'], 'sveglia': n['sveglia'],
                     'efficienza': n['efficienza'], 'profondo': n['profondo'],
-                    'rem': n['rem'], 'sessioni': n['sessioni'],
+                    'rem': n['rem'], 'sveglio': n['sveglio'], 'sessioni': n['sessioni'],
                     'festivo': n['festivo']} for n in elenco],
         'notti': len(elenco),
         'dal': primo.isoformat(),
@@ -381,6 +433,8 @@ def statistiche(elenco=None):
         'notti_recenti': len(coda),
         'confronto': confronto,
         'settimane': ordinate,
+        'notti_buone': notti_buone,
+        'fasce': fasce,
         'striscia_ora': striscia_ora,
         'striscia_record': record_striscia,
         'striscia_record_finita': quando_record.isoformat() if quando_record else None,
